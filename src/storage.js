@@ -332,9 +332,152 @@ if (storage.getTasks().length === 0) {
       swapSkill: 'React Tutoring',
       createdAt: new Date().toISOString(),
       applications: []
+    },
+    {
+      id: 't15',
+      title: 'Personal Portfolio Website',
+      description: 'Create a responsive one-page portfolio website using HTML, CSS, and basic JS. Should include a contact form and project gallery.',
+      category: 'Coding',
+      budget: 600,
+      deadline: '2026-04-25',
+      posterId: 'u3',
+      status: 'pending',
+      isUrgent: false,
+      isSkillSwap: false,
+      createdAt: new Date().toISOString(),
+      applications: []
+    },
+    {
+      id: 't16',
+      title: 'YouTube Thumbnail Design (Gaming)',
+      description: 'Need 3 high-click-through-rate thumbnails for my gaming channel. Vibrant colors and catchy text required.',
+      category: 'Design',
+      budget: 120,
+      deadline: '2026-04-10',
+      posterId: 'u1',
+      status: 'pending',
+      isUrgent: true,
+      isSkillSwap: false,
+      createdAt: new Date().toISOString(),
+      applications: []
+    },
+    {
+      id: 't17',
+      title: 'Cultural Fest Poster Design',
+      description: 'Design an A3 size poster for the upcoming college cultural fest. Needs to be colorful and include all event details.',
+      category: 'Design',
+      budget: 200,
+      deadline: '2026-04-15',
+      posterId: 'u3',
+      status: 'pending',
+      isUrgent: false,
+      isSkillSwap: false,
+      createdAt: new Date().toISOString(),
+      applications: []
+    },
+    {
+      id: 't18',
+      title: 'Social Media Content Manager',
+      description: 'Manage a student startup Instagram account for 2 weeks. Create 5 posts and 10 stories. Engagement focus.',
+      category: 'Content',
+      budget: 450,
+      deadline: '2026-04-20',
+      posterId: 'u1',
+      status: 'pending',
+      isUrgent: false,
+      isSkillSwap: false,
+      createdAt: new Date().toISOString(),
+      applications: []
     }
   ];
   storage.setTasks(mockTasks);
+} else {
+  // Ensure new tasks (t15-t19) are added if missing
+  const currentTasks = storage.getTasks();
+  const newTasks = [
+    {
+      id: 't15',
+      title: 'Personal Portfolio Website',
+      description: 'Create a responsive one-page portfolio website using HTML, CSS, and basic JS. Should include a contact form and project gallery.',
+      category: 'Coding',
+      budget: 600,
+      deadline: '2026-04-25',
+      posterId: 'u3',
+      status: 'pending',
+      isUrgent: false,
+      isSkillSwap: false,
+      createdAt: new Date().toISOString(),
+      applications: []
+    },
+    {
+      id: 't16',
+      title: 'YouTube Thumbnail Design (Gaming)',
+      description: 'Need 3 high-click-through-rate thumbnails for my gaming channel. Vibrant colors and catchy text required.',
+      category: 'Design',
+      budget: 120,
+      deadline: '2026-04-10',
+      posterId: 'u1',
+      status: 'pending',
+      isUrgent: true,
+      isSkillSwap: false,
+      createdAt: new Date().toISOString(),
+      applications: []
+    },
+    {
+      id: 't17',
+      title: 'Cultural Fest Poster Design',
+      description: 'Design an A3 size poster for the upcoming college cultural fest. Needs to be colorful and include all event details.',
+      category: 'Design',
+      budget: 200,
+      deadline: '2026-04-15',
+      posterId: 'u3',
+      status: 'pending',
+      isUrgent: false,
+      isSkillSwap: false,
+      createdAt: new Date().toISOString(),
+      applications: []
+    },
+    {
+      id: 't18',
+      title: 'Social Media Content Manager',
+      description: 'Manage a student startup Instagram account for 2 weeks. Create 5 posts and 10 stories. Engagement focus.',
+      category: 'Content',
+      budget: 450,
+      deadline: '2026-04-20',
+      posterId: 'u1',
+      status: 'pending',
+      isUrgent: false,
+      isSkillSwap: false,
+      createdAt: new Date().toISOString(),
+      applications: []
+    },
+    {
+      id: 't19',
+      title: 'Data Entry for Research Project',
+      description: 'Input 500 survey responses into an Excel spreadsheet. Accuracy is paramount. Estimated time: 4-5 hours.',
+      category: 'Other',
+      budget: 300,
+      deadline: '2026-04-12',
+      posterId: 'u3',
+      status: 'pending',
+      isUrgent: false,
+      isSkillSwap: false,
+      createdAt: new Date().toISOString(),
+      applications: []
+    }
+  ];
+
+  let updated = false;
+  newTasks.forEach(nt => {
+    if (!currentTasks.some(ct => ct.id === nt.id)) {
+      currentTasks.push(nt);
+      updated = true;
+    }
+  });
+
+  if (updated) {
+    storage.setTasks(currentTasks);
+  }
 }
 
 if (storage.getNotifications().length < 10) {
