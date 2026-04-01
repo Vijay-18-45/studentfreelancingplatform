@@ -400,7 +400,7 @@ window.handleSearch = (val) => setState({ searchQuery: val });
 window.handleCategoryFilter = (cat) => setState({ categoryFilter: cat });
 
 const Sidebar = () => `
-    <aside class="fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-gray-200 transform ${state.isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 transition-transform duration-300 ease-in-out">
+    <aside class="fixed lg:sticky top-0 left-0 z-40 w-64 h-screen bg-white border-r border-gray-200 transform ${state.isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 transition-transform duration-300 ease-in-out">
         <div class="h-full flex flex-col p-6">
             <div class="flex items-center gap-2 mb-10">
                 <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
@@ -667,6 +667,7 @@ window.toggleSidebar = () => setState({ isSidebarOpen: !state.isSidebarOpen });
 
 const MainLayout = (content) => `
     <div class="min-h-screen bg-gray-50 flex flex-col lg:flex-row">
+        ${state.isSidebarOpen ? `<div onclick="window.toggleSidebar()" class="fixed inset-0 bg-black/20 backdrop-blur-sm z-30 lg:hidden transition-opacity"></div>` : ''}
         ${Sidebar()}
         
         <div class="lg:hidden bg-white border-b border-gray-200 p-4 flex items-center justify-between sticky top-0 z-30">
