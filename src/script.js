@@ -150,6 +150,17 @@ const Badge = (text, color = 'indigo') => {
     return `<span class="px-2 py-0.5 rounded-full text-xs font-semibold border ${colors[color]}">${text}</span>`;
 };
 
+const Select = (name, options, required = false) => `
+    <div class="relative group">
+        <select name="${name}" ${required ? 'required' : ''} class="w-full appearance-none px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none bg-white transition-all cursor-pointer hover:border-indigo-300">
+            ${options.map(opt => `<option value="${opt.value}">${opt.label}</option>`).join('')}
+        </select>
+        <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400 group-hover:text-indigo-500 transition-colors">
+            ${Icon('chevron-down', 'w-5 h-5')}
+        </div>
+    </div>
+`;
+
 // --- Views ---
 const LandingView = () => {
     const isLogin = state.landingTab === 'login';
@@ -186,10 +197,10 @@ const LandingView = () => {
                         </div>
                         <div class="space-y-1">
                             <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Login As</label>
-                            <select name="role" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none bg-white transition-all">
-                                <option value="student_worker">Student (Worker)</option>
-                                <option value="student_buyer">Student (Buyer)</option>
-                            </select>
+                            ${Select('role', [
+                                { value: 'student_worker', label: 'Student (Worker)' },
+                                { value: 'student_buyer', label: 'Student (Buyer)' }
+                            ])}
                         </div>
                         <div class="pt-2">
                             <button type="submit" class="w-full py-4 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200">
@@ -213,10 +224,10 @@ const LandingView = () => {
                         </div>
                         <div class="space-y-1">
                             <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">I want to</label>
-                            <select name="role" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none bg-white transition-all">
-                                <option value="student_worker">Work & Earn</option>
-                                <option value="student_buyer">Post Tasks</option>
-                            </select>
+                            ${Select('role', [
+                                { value: 'student_worker', label: 'Work & Earn' },
+                                { value: 'student_buyer', label: 'Post Tasks' }
+                            ])}
                         </div>
                         <div class="pt-2">
                             <button type="submit" class="w-full py-4 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200">
@@ -784,9 +795,7 @@ const PostTaskView = () => `
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-2">
                         <label class="text-sm font-bold text-gray-700 uppercase tracking-wider">Category</label>
-                        <select name="category" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
-                            ${['Tutoring', 'Coding', 'Design', 'Content', 'Writing', 'Other'].map(cat => `<option value="${cat}">${cat}</option>`).join('')}
-                        </select>
+                        ${Select('category', ['Tutoring', 'Coding', 'Design', 'Content', 'Writing', 'Other'].map(cat => ({ value: cat, label: cat })))}
                     </div>
                     <div class="space-y-2">
                         <label class="text-sm font-bold text-gray-700 uppercase tracking-wider">Deadline</label>
@@ -829,6 +838,7 @@ window.handlePostTask = (e) => {
     alert('Task posted successfully!');
 };
 
+window.setState = setState;
 window.handleLogin = handleLogin;
 window.handleSignup = handleSignup;
 window.setView = setView;
