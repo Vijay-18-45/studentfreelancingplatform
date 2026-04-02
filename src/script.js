@@ -7,6 +7,7 @@ let state = {
     landingTab: 'login', // 'login' or 'signup'
     tasks: storage.getTasks(),
     notifications: storage.getNotifications(),
+    favorites: storage.getFavorites(),
     searchQuery: '',
     categoryFilter: 'All',
     isSidebarOpen: false
@@ -18,6 +19,7 @@ function setState(newState) {
     storage.setCurrentUser(state.currentUser);
     storage.setTasks(state.tasks);
     storage.setNotifications(state.notifications);
+    storage.setFavorites(state.favorites);
     render();
 }
 
@@ -148,6 +150,18 @@ const Badge = (text, color = 'indigo') => {
         purple: 'bg-purple-50 text-purple-700 border-purple-100',
     };
     return `<span class="px-2 py-0.5 rounded-full text-xs font-semibold border ${colors[color]}">${text}</span>`;
+};
+
+const Rating = (currentRating, onRateClick) => {
+    return `
+        <div class="flex gap-1">
+            ${[1, 2, 3, 4, 5].map(star => `
+                <button onclick="${onRateClick}(${star})" class="focus:outline-none transition-transform hover:scale-110">
+                    ${Icon('star', `w-4 h-4 ${star <= currentRating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`)}
+                </button>
+            `).join('')}
+        </div>
+    `;
 };
 
 const Select = (name, options, required = false) => `
@@ -401,6 +415,17 @@ const DashboardView = () => {
                                         <div>
                                             <h4 class="font-bold text-gray-900">${task.title}</h4>
                                             <p class="text-sm text-gray-500">${task.category} • ${task.status.replace('_', ' ')}</p>
+                                            ${task.status === 'completed' && task.posterId === state.currentUser.id ? `
+                                                <div class="mt-2">
+                                                    <p class="text-xs text-gray-400 mb-1">Your Rating:</p>
+                                                    ${Rating(task.rating || 0, `window.handleRateWorker.bind(null, '${task.id}')`)}
+                                                </div>
+                                            ` : ''}
+                                            ${task.status === 'in_progress' && task.posterId === state.currentUser.id ? `
+                                                <div class="mt-2">
+                                                    ${Button('Mark Completed', () => window.handleCompleteTask(task.id), 'primary', 'text-xs py-1 px-3')}
+                                                </div>
+                                            ` : ''}
                                         </div>
                                     </div>
                                     <div class="text-right">
@@ -555,7 +580,7 @@ const MarketplaceView = () => {
                             </div>
                             <div class="p-6 bg-gray-50 border-t border-gray-100 flex gap-3">
                                 ${Button(isOwner ? 'Your Task' : hasApplied ? 'Applied' : 'Apply Now', () => handleApply(task.id), 'primary', 'flex-1', hasApplied || isOwner)}
-                                ${Button(Icon('star', 'w-5 h-5'), () => {}, 'secondary', 'px-3')}
+                                ${Button(Icon('star', `w-5 h-5 ${state.favorites.includes(task.id) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-400'}`), () => window.toggleFavorite(task.id), 'secondary', 'px-3')}
                             </div>
                         </div>
                     `;
@@ -577,6 +602,39 @@ const MarketplaceView = () => {
 
 window.handleSearch = (val) => setState({ searchQuery: val });
 window.handleCategoryFilter = (cat) => setState({ categoryFilter: cat });
+
+window.toggleFavorite = (taskId) => {
+    const favorites = [...state.favorites];
+    const index = favorites.indexOf(taskId);
+    if (index > -1) {
+        favorites.splice(index, 1);
+    } else {
+        favorites.push(taskId);
+    }
+    setState({ favorites });
+};
+
+window.handleCompleteTask = (taskId) => {
+    const tasks = state.tasks.map(t => {
+        if (t.id === taskId) {
+            return { ...t, status: 'completed' };
+        }
+        return t;
+    });
+    setState({ tasks });
+    alert('Task marked as completed! You can now rate the worker.');
+};
+
+window.handleRateWorker = (taskId, rating) => {
+    const tasks = state.tasks.map(t => {
+        if (t.id === taskId) {
+            return { ...t, rating };
+        }
+        return t;
+    });
+    setState({ tasks });
+    alert(`You rated the worker ${rating} stars!`);
+};
 
 const Sidebar = () => `
     <aside class="fixed lg:sticky top-0 left-0 z-40 w-64 h-screen bg-white border-r border-gray-200 transform ${state.isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 transition-transform duration-300 ease-in-out">

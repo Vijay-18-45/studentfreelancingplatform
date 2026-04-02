@@ -2,6 +2,7 @@ const USERS_KEY = 'campus_gig_users';
 const TASKS_KEY = 'campus_gig_tasks';
 const NOTIFS_KEY = 'campus_gig_notifications';
 const CURRENT_USER_KEY = 'campus_gig_current_user';
+const FAVORITES_KEY = 'campus_gig_favorites';
 
 export const storage = {
   getUsers: () => JSON.parse(localStorage.getItem(USERS_KEY) || '[]'),
@@ -15,6 +16,9 @@ export const storage = {
   
   getCurrentUser: () => JSON.parse(localStorage.getItem(CURRENT_USER_KEY) || 'null'),
   setCurrentUser: (user) => localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user)),
+
+  getFavorites: () => JSON.parse(localStorage.getItem(FAVORITES_KEY) || '[]'),
+  setFavorites: (favorites) => localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites)),
 };
 
 // Initialize with some mock data if empty
@@ -189,7 +193,8 @@ if (storage.getTasks().length === 0) {
       isUrgent: false,
       isSkillSwap: false,
       createdAt: new Date().toISOString(),
-      applications: []
+      applications: [],
+      rating: 5
     },
     {
         id: 't5',
@@ -461,7 +466,8 @@ if (storage.getTasks().length === 0) {
       isUrgent: false,
       isSkillSwap: false,
       createdAt: new Date().toISOString(),
-      applications: []
+      applications: [],
+      rating: 5
     }
   ];
   storage.setTasks(mockTasks);
